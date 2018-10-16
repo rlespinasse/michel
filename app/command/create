@@ -63,13 +63,17 @@ if [[ "\${BASH_SOURCE[0]}" = "\$0" ]]; then
     # ...
 
     # Some logging capabilites
-    # info "log some information"
-    # warning "print a warning"
-    # error "log an error"
-    # fatal "log information before to exit in error"
+    debug "log some information for debugging"
+    info "log some information"
+    warning "print a warning"
+    error "log an error"
+    # fatal "log information around the BIG error before to exit in error"
 
-    # Read some value from the runtime configuration file (JSON format)
-    # cli_call rc read '.key'
+    # Read some value (with JQ filter) from the runtime configuration file (JSON format)
+    rc_read ".key"
+
+    # Access others commands with cli_call
+    cli_call rc location
 fi
 EOT
 

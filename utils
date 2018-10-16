@@ -12,25 +12,33 @@ COLOR_DARK_GRAY="\033[38m"
 COLOR_NORMAL="\033[39m"
 
 function bcli_trim_whitespace() {
-    # Function courtesy of http://stackoverflow.com/a/3352015
-    local var="$*"
-    var="${var#"${var%%[![:space:]]*}"}"   # remove leading whitespace characters
-    var="${var%"${var##*[![:space:]]}"}"   # remove trailing whitespace characters
-    echo -n "$var"
+  # Function courtesy of http://stackoverflow.com/a/3352015
+  local var="$*"
+  var="${var#"${var%%[![:space:]]*}"}"   # remove leading whitespace characters
+  var="${var%"${var##*[![:space:]]}"}"   # remove trailing whitespace characters
+  echo -n "$var"
 }
 
 function bcli_show_header() {
-    echo -e "$(bcli_trim_whitespace "$(cat "$1/.name")")"
-    echo -e "${COLOR_CYAN}Version  ${COLOR_NORMAL}$(bcli_trim_whitespace "$(cat "$1/.version")")"
-    echo -e "${COLOR_CYAN}Author   ${COLOR_NORMAL}$(bcli_trim_whitespace "$(cat "$1/.author")")"
+  echo -e "$(bcli_trim_whitespace "$(cat "$1/.name")")"
+  echo -e "${COLOR_CYAN}Version  ${COLOR_NORMAL}$(bcli_trim_whitespace "$(cat "$1/.version")")"
+  echo -e "${COLOR_CYAN}Author   ${COLOR_NORMAL}$(bcli_trim_whitespace "$(cat "$1/.author")")"
 }
 
 readonly LOG_FILE="/tmp/$(basename "$0").log"
+function debug()   { echo -e "${COLOR_BLUE}[DEBUG]   ${COLOR_NORMAL}$*" | tee -a "$LOG_FILE" >&2 ; }
 function info()    { echo -e "${COLOR_GREEN}[INFO]    ${COLOR_NORMAL}$*" | tee -a "$LOG_FILE" >&2 ; }
 function warning() { echo -e "${COLOR_YELLOW}[WARNING] ${COLOR_NORMAL}$*" | tee -a "$LOG_FILE" >&2 ; }
 function error()   { echo -e "${COLOR_MAGENTA}[ERROR]   ${COLOR_NORMAL}$*" | tee -a "$LOG_FILE" >&2 ; }
 function fatal()   { echo -e "${COLOR_RED}[FATAL]   ${COLOR_NORMAL}$*" | tee -a "$LOG_FILE" >&2 ; exit 1 ; }
 
 function cli_call() {
-    "$ROOT_DIR/cli" "$@"
+  if [ "$(rc_read ".options.print_log.cli_call")" == "true" ]; then
+    debug "cli_call \"$(cat "$ROOT_DIR"/app/.name) $(echo "$@")\""
+  fi
+  "$ROOT_DIR/cli" "$@"
+}
+
+function rc_read() {
+  "$ROOT_DIR/cli" rc read "$@"
 }

@@ -10,6 +10,11 @@ fi
 
 cat > "$RC_PATH" <<EOF
 {
+    "options": {
+        "print_log": {
+            "cli_call": "true"
+        }
+    },
     "key": "value"
 }
 EOF
