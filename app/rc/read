@@ -1,15 +1,16 @@
 #!/usr/bin/env bash
 
-if [ $# == 0 ]; then
-    exit 3
-fi
+# Load utility methods
+. "\$ROOT_DIR/utils"
+
+checkusage "$0" "$#"
 
 key="$1"
-default_value="$2"
+default_value="${2:-}"
 
-value=$(jq -r "$key" "$HOME/.$(cat "$ROOT_DIR"/app/.name)rc.json")
+value=$(jq -r "$key" "$HOME/.$(cat "$ROOT_DIR"/app/.name)rc.json" | sed 's/^null$//')
 
-if [ "$value" != "null" ]
+if [ "$value" != "" ]
 then
     echo "$value"
 elif [ -n "$default_value" ]
