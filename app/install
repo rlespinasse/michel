@@ -41,3 +41,11 @@ cat > "$BASH_COMPLETION/$NAME" <<EOC
 source "$APP_DIR/complete"
 complete -F _bash_cli $NAME
 EOC
+
+if [[ -e "$HOME/.zshrc" ]]; then
+    {
+        echo "autoload -U +X compinit && compinit"
+        echo "autoload -U +X bashcompinit && bashcompinit"
+        echo "source $BASH_COMPLETION$NAME"
+    } >> "$HOME"/.zshrc
+fi
