@@ -44,3 +44,10 @@ fi
 
 rm "$FOLDER/$NAME"
 rm "$BASH_COMPLETION/$NAME"
+
+if [[ -e "$HOME/.zshrc" ]]; then
+    echo "Don't forget to remove the following lines"
+    echo "autoload -U +X compinit && compinit"
+    echo "autoload -U +X bashcompinit && bashcompinit"
+    echo "source $BASH_COMPLETION$NAME"
+fi
